@@ -11,9 +11,9 @@ class Task extends Model
 
     // Definir los campos asignables
     protected $fillable = [
-        'titulo',
-        'descripcion',
-        'estado',
+        'title',
+        'description',
+        'status',
         'user_id',
     ];
 

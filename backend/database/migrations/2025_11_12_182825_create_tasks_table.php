@@ -17,9 +17,9 @@ return new class extends Migration
             // relacion con usuario, si borramos el usuario se borran sus tareas
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->string('titulo');
-            $table->text('descripcion')->nullable();
-            $table->enum('estado', ['pendiente', 'en_progreso', 'completada'])->default('pendiente');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->enum('status', ['pendiente', 'en_progreso', 'completada'])->default('pendiente');
 
             $table->timestamps();
         });

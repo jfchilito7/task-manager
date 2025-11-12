@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -17,9 +18,9 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-            'estado' => 'in:pendiente,en_progreso,completada',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'in:pendiente,en_progreso,completada',
         ]);
 
         // Crear la tarea asociada al usuario autenticado
@@ -37,9 +38,9 @@ class TaskController extends Controller
         }
 
         $validate = $request->validate([
-            'titulo' => 'sometimes|string|max:255',
-            'descripcion' => 'nullable|string',
-            'estado' => 'sometimes|in:pendiente,en_progreso,completada',
+            'title' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'sometimes|in:pendiente,en_progreso,completada',
         ]);
 
         $task->update($validate);
