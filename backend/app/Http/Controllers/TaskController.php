@@ -20,7 +20,8 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'in:pendiente,en_progreso,completada'
+            'status' => 'in:pendiente,en_progreso,completada',
+            'priority' => 'in:low,medium,high'
         ]);
 
         $task = $request->user()->tasks()->create($validated);
@@ -37,7 +38,8 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'sometimes|in:pendiente,en_progreso,completada'
+            'status' => 'sometimes|in:pendiente,en_progreso,completada',
+            'priority' => 'in:low,medium,high'
         ]);
 
         $task->update($validated);
