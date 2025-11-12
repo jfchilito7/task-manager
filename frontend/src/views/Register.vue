@@ -11,10 +11,8 @@
         </div>
         
         <div v-if="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
+            <span class="font-bold">Error: </span>
             <span class="block sm:inline">{{ errorMessage }}</span>
-            <ul v-if="errorsList" class="list-disc list-inside mt-1">
-                <li v-for="(error, index) in errorsList" :key="index">{{ error[0] }}</li>
-            </ul>
         </div>
 
         <form class="mt-8 space-y-6" @submit.prevent="handleRegister">
@@ -87,34 +85,30 @@ const name = ref('');
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
-const errorsList = ref(null);
 const router = useRouter();
 
 const handleRegister = async () => {
     errorMessage.value = '';
-    errorsList.value = null;
     
     try {
+        // Enviamos los datos al backend
         const response = await axiosClient.post('/register', {
             name: name.value,
             email: email.value,
             password: password.value
         });
 
-        // El backend devuelve el token al registrarse, así que logueamos directo
+        // ÉXITO: Guardamos el token y entramos
         localStorage.setItem('token', response.data.access_token);
-        
-        // Redirigir al Dashboard
         router.push('/dashboard');
 
     } catch (error) {
         console.error(error);
-        if (error.response && error.response.data.errors) {
-            // Errores de validación de Laravel (ej: email repetido)
-            errorsList.value = error.response.data.errors;
-            errorMessage.value = 'Por favor corrige los errores:';
+        // Manejo de errores detallado
+        if (error.response && error.response.data.message) {
+            errorMessage.value = error.response.data.message; // Ej: "El email ya ha sido registrado"
         } else {
-            errorMessage.value = 'Ocurrió un error al registrarse';
+            errorMessage.value = 'Ocurrió un error inesperado al registrarse.';
         }
     }
 };

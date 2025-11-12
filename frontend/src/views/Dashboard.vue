@@ -59,10 +59,30 @@
         </div>
 
         <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-            <div class="flex gap-2">
-                <button @click="filterStatus = 'all'" :class="filterStatus === 'all' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'" class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">Todo</button>
-                <button @click="filterStatus = 'pendiente'" :class="filterStatus === 'pendiente' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 'bg-white text-gray-700'" class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">Pendientes</button>
-                <button @click="filterStatus = 'completada'" :class="filterStatus === 'completada' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-white text-gray-700'" class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">Completadas</button>
+            <div class="flex gap-2 flex-wrap">
+                <button @click="filterStatus = 'all'" 
+                    :class="filterStatus === 'all' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'" 
+                    class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">
+                    Todo
+                </button>
+                
+                <button @click="filterStatus = 'pendiente'" 
+                    :class="filterStatus === 'pendiente' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 'bg-white text-gray-700'" 
+                    class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">
+                    Pendientes
+                </button>
+
+                <button @click="filterStatus = 'en_progreso'" 
+                    :class="filterStatus === 'en_progreso' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-white text-gray-700'" 
+                    class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">
+                    En Progreso
+                </button>
+
+                <button @click="filterStatus = 'completada'" 
+                    :class="filterStatus === 'completada' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-white text-gray-700'" 
+                    class="px-4 py-2 rounded-full text-sm font-medium shadow-sm border hover:bg-gray-50 transition">
+                    Completadas
+                </button>
             </div>
             <p class="text-sm text-gray-500">
                 Mostrando {{ filteredTasks.length }} tareas
@@ -85,7 +105,7 @@
                         {{ formatStatus(task.status) }}
                         </span>
                     </div>
-                    <p class="text-sm text-gray-500 wrap-break-words">{{ task.description || 'Sin descripción' }}</p>
+                    <p class="text-sm text-gray-500 break-words">{{ task.description || 'Sin descripción' }}</p>
                     <p class="text-xs text-gray-400 mt-1">Creado: {{ new Date(task.created_at).toLocaleDateString() }}</p>
                 </div>
 
@@ -104,6 +124,7 @@
 
                 </div>
             </li>
+            
             <li v-if="filteredTasks.length === 0" class="px-4 py-12 text-center text-gray-400 bg-gray-50">
                 <p class="text-lg">📭 No hay tareas en esta lista.</p>
             </li>
@@ -121,7 +142,7 @@ import axiosClient from '../axios';
 
 const router = useRouter();
 const tasks = ref([]);
-const filterStatus = ref('all'); // 'all', 'pendiente', 'completada'
+const filterStatus = ref('all');
 
 // Variables para edición
 const isEditing = ref(false);
@@ -139,7 +160,12 @@ const loadTasks = async () => {
         const response = await axiosClient.get('/tasks');
         tasks.value = response.data;
     } catch (error) {
-        if (error.response && error.response.status === 401) router.push('/login');
+        console.error("Error cargando tareas", error);
+        if (error.response && error.response.status === 401) {
+            // Token vencido o inválido
+            localStorage.removeItem('token');
+            router.push('/login');
+        }
     }
 };
 
@@ -147,43 +173,41 @@ onMounted(() => {
     loadTasks();
 });
 
-// --- LÓGICA DE FILTROS (COMPUTADA) ---
-// Esto filtra las tareas en tiempo real sin llamar a la API de nuevo
+// --- FILTROS ---
 const filteredTasks = computed(() => {
     if (filterStatus.value === 'all') return tasks.value;
     return tasks.value.filter(task => task.status === filterStatus.value);
 });
 
 const formatStatus = (status) => {
-    const map = { 'pendiente': 'Pendiente', 'en_progreso': 'En Progreso', 'completada': 'Completada' };
+    const map = { 
+        'pendiente': 'Pendiente', 
+        'en_progreso': 'En Progreso', 
+        'completada': 'Completada' 
+    };
     return map[status] || status;
 };
 
-// --- CRUD: CREAR O ACTUALIZAR ---
+// --- CRUD ---
 const saveTask = async () => {
     try {
         if (isEditing.value) {
-        // ACTUALIZAR (PUT)
+        // UPDATE
         await axiosClient.put(`/tasks/${editingId.value}`, form.value);
-        // Opcional: Mostrar notificación de éxito
         } else {
-        // CREAR (POST)
+        // CREATE
         await axiosClient.post('/tasks', form.value);
-    }
-    
-    // Resetear formulario y recargar
-    cancelEdit();
-    await loadTasks();
-    
+        }
+        // Resetear y recargar
+        cancelEdit();
+        await loadTasks();
     } catch (error) {
         console.error("Error guardando tarea:", error);
-        alert("Hubo un error al guardar. Revisa los datos.");
+        alert("Error al guardar. Verifica que el título no esté vacío.");
     }
 };
 
-// --- PREPARAR EDICIÓN ---
 const loadTaskForEdit = (task) => {
-  // Rellenamos el formulario con los datos de la tarea seleccionada
     form.value = { 
         title: task.title, 
         description: task.description, 
@@ -192,7 +216,7 @@ const loadTaskForEdit = (task) => {
     editingId.value = task.id;
     isEditing.value = true;
     
-    // Scroll suave hacia arriba para ver el formulario
+    // Scroll suave hacia arriba
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
@@ -202,20 +226,19 @@ const cancelEdit = () => {
     editingId.value = null;
 };
 
-// --- ELIMINAR ---
 const deleteTask = async (id) => {
-    if (!confirm('¿Estás seguro de eliminar esta tarea? No hay vuelta atrás.')) return;
+    if (!confirm('¿Estás seguro de borrar esta tarea?')) return;
     
     try {
         await axiosClient.delete(`/tasks/${id}`);
         await loadTasks();
     } catch (error) {
-        console.error(error);
+        console.error("Error borrando", error);
     }
 };
 
 const logout = () => {
-    localStorage.removeItem('access_token');
+    localStorage.removeItem('token');
     router.push('/login');
 };
 </script>
