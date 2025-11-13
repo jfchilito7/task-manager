@@ -113,4 +113,30 @@ php artisan key:generate
 
 # Iniciar servidor (Puerto 8000)
 php artisan serve
+
+
+🧪 Decisiones Técnicas y Solución de Problemas
+¿Por qué SQLite?
+Para esta prueba técnica, SQLite elimina la necesidad de configurar un servidor de base de datos externo (MySQL/PostgreSQL), permitiendo que el evaluador clone y ejecute el proyecto inmediatamente sin configuraciones complejas de credenciales.
+
+Manejo de CORS y Puertos
+El proyecto está configurado para permitir peticiones desde cualquier origen (*) en entorno de desarrollo. Esto previene bloqueos si Docker o Vite asignan puertos dinámicos (ej: 5174) o si se accede mediante IP local.
+
+Interceptor de Axios
+Se implementó una lógica en frontend/src/axios.js para detectar respuestas 401 Unauthorized. Si el token expira o la base de datos se reinicia, el usuario es redirigido automáticamente al Login, mejorando la UX y evitando estados inconsistentes.
+```
+
+### 2. Configuración del Frontend (Vue)
+
+Requiere **Node.js 18+** y **NPM**.
+
+```bash
+# En una nueva terminal
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
 ```
