@@ -1,3 +1,5 @@
 <template>
-  <router-view></router-view>
+  <div class="app-background">
+    <router-view />
+  </div>
 </template>

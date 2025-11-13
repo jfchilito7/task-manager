@@ -1,7 +1,17 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center p-4"> <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-xl p-8 space-y-6"> <div class="text-center">
-        <h2 class="text-3xl font-extrabold text-white">Inicio Sesión</h2> <p class="mt-2 text-sm text-gray-300">Gestiona tus tareas de forma colaborativa</p> </div>
-      <form @submit.prevent="login" class="space-y-4">
+  <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-xl p-8 space-y-6 border border-gray-700">
+      
+      <div class="text-center">
+        <h2 class="text-3xl font-extrabold text-white">Inicio Sesión</h2>
+        <p class="mt-2 text-sm text-gray-300">Gestiona tus tareas de forma colaborativa</p>
+      </div>
+
+      <div v-if="errorMessage" class="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded relative text-sm">
+        <span class="block sm:inline">{{ errorMessage }}</span>
+      </div>
+
+      <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
           <label for="email" class="sr-only">Correo electrónico</label>
           <input
@@ -37,11 +47,13 @@
           </button>
         </div>
       </form>
+      
       <div class="text-center text-sm">
         <router-link to="/register" class="font-medium text-red-400 hover:text-red-300">
           ¿No tienes cuenta? Regístrate aquí
         </router-link>
       </div>
+      
     </div>
   </div>
 </template>
@@ -58,18 +70,27 @@ const router = useRouter();
 
 const handleLogin = async () => {
     errorMessage.value = '';
-    console.log("Intentando login..."); // <--- Agregué esto para ver si sale en consola
+    console.log("Intentando login...");
     
     try {
         const response = await axiosClient.post('/login', {
             email: email.value,
             password: password.value
         });
+        
+        // Guardar token
         localStorage.setItem('token', response.data.access_token);
+        
+        // Redirigir
         router.push('/dashboard');
+        
     } catch (error) {
         console.error(error);
-        errorMessage.value = 'Error al iniciar sesión. Verifica tus credenciales.';
+        if (error.response && error.response.status === 401) {
+            errorMessage.value = 'Credenciales incorrectas. Inténtalo de nuevo.';
+        } else {
+            errorMessage.value = 'Ocurrió un error al iniciar sesión.';
+        }
     }
 };
 </script>
