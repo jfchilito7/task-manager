@@ -1,14 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50 pb-10">
-    <nav class="bg-white shadow sticky top-0 z-10">
+    <nav class="bg-black shadow sticky top-0 z-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center gap-3">
-            <h1 class="text-2xl font-bold text-indigo-600">Task Manager</h1>
-            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded">Prueba Técnica</span>
+            <h1 class="text-2xl font-bold text-red-600"> RED Task Manager</h1>
+            <span class="bg-red-100 text-black-800 text-xs font-medium px-2.5 py-0.5 rounded">Prueba Técnica</span>
           </div>
           <div class="flex items-center">
-            <button @click="logout" class="text-sm text-gray-600 hover:text-red-600 font-medium transition border border-gray-300 rounded px-3 py-1 hover:bg-gray-50">
+            <button @click="logout" class="text-sm text-white hover:text-red-600 font-medium transition border border-gray-300 rounded px-3 py-1 hover:bg-gray-50">
               Cerrar Sesión
             </button>
           </div>
@@ -18,7 +18,7 @@
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       
-      <div class="bg-white shadow-lg sm:rounded-lg mb-8 p-6 border-t-4" :class="isEditing ? 'border-yellow-500' : 'border-indigo-600'">
+      <div class="bg-white shadow-lg sm:rounded-lg mb-8 p-6 border-t-4" :class="isEditing ? 'border-yellow-500' : 'border-red-600'">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold leading-6 text-gray-900">
             {{ isEditing ? '✏️ Editar Tarea' : '✨ Nueva Tarea' }}
@@ -54,13 +54,13 @@
           
           <div class="sm:col-span-6">
             <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-            <textarea v-model="form.description" rows="2" placeholder="Detalles adicionales..." class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm px-3"></textarea>
+            <textarea v-model="form.description" rows="2" placeholder="Detalles adicionales..." class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-red-600 sm:text-sm px-3"></textarea>
           </div>
           
           <div class="sm:col-span-6 text-right">
             <button type="submit" 
               class="inline-flex justify-center rounded-md py-2 px-6 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors"
-              :class="isEditing ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-indigo-600 hover:bg-indigo-500'">
+              :class="isEditing ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-red-600 hover:bg-red-500'">
               {{ isEditing ? 'Actualizar Tarea' : 'Guardar Tarea' }}
             </button>
           </div>
