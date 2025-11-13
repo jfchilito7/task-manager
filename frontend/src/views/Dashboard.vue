@@ -70,7 +70,7 @@
             
             <div class="sm:col-span-6 text-right">
                 <button type="submit" 
-                class="inline-flex justify-center rounded-md py-2 px-6 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors"
+                class="inline-flex justify-center rounded-md py-2 px-6 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-offset-2 transition-colors"
                 :class="isEditing ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-red-600 hover:bg-red-500'">
                 {{ isEditing ? 'Actualizar Tarea' : 'Guardar Tarea' }}
                 </button>
@@ -134,7 +134,7 @@
                         {{ formatPriority(task.priority) }}
                         </span>
                     </div>
-                    <p class="text-sm text-gray-400 break-words">{{ task.description || 'Sin descripción' }}</p>
+                    <p class="text-sm text-gray-400 wrap-break-words">{{ task.description || 'Sin descripción' }}</p>
                     <p class="text-xs text-gray-500 mt-1">Creado: {{ new Date(task.created_at).toLocaleDateString() }}</p>
                 </div>
 
