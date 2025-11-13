@@ -5,7 +5,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
             <div class="flex items-center gap-3">
-                <img src="/red-logo.png" alt="RED" class="h-8 w-auto" />
                 <h1 class="text-2xl font-bold text-white">Task Manager</h1>
             </div>
             <div class="flex items-center">
