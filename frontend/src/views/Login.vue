@@ -1,28 +1,49 @@
 <template>
-    <div class="flex min-h-screen items-center justify-center bg-gray-100 px-4">
-        <div class="w-full max-w-md space-y-8 bg-white p-8 shadow-md rounded-lg">
-        <h2 class="text-center text-3xl font-bold text-gray-900">Inicia Sesión</h2>
-        
-        <div v-if="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {{ errorMessage }}
+    <div class="min-h-screen flex items-center justify-center p-4"> <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-xl p-8 space-y-6"> <div class="text-center">
+        <h2 class="text-3xl font-extrabold text-white">Inicio Sesión</h2> <p class="mt-2 text-sm text-gray-300">Gestiona tus tareas de forma colaborativa</p> </div>
+      <form @submit.prevent="login" class="space-y-4">
+        <div>
+          <label for="email" class="sr-only">Correo electrónico</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            v-model="email"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-600 placeholder-gray-400 text-white bg-gray-700 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+            placeholder="Correo electrónico"
+          />
         </div>
-
-        <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-            <div class="space-y-4">
-            <input v-model="email" type="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3" placeholder="Correo electrónico">
-            <input v-model="password" type="password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3" placeholder="Contraseña">
-            </div>
-
-            <button type="submit" class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+        <div>
+          <label for="password" class="sr-only">Contraseña</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            v-model="password"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-600 placeholder-gray-400 text-white bg-gray-700 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+            placeholder="Contraseña"
+          />
+        </div>
+        <div>
+          <button
+            type="submit"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+          >
             Ingresar
-            </button>
-            
-            <div class="text-center">
-                <router-link to="/register" class="text-sm text-indigo-600 hover:text-indigo-500">¿No tienes cuenta? Regístrate</router-link>
-            </div>
-        </form>
+          </button>
         </div>
+      </form>
+      <div class="text-center text-sm">
+        <router-link to="/register" class="font-medium text-red-400 hover:text-red-300">
+          ¿No tienes cuenta? Regístrate aquí
+        </router-link>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
