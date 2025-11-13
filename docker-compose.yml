@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Servicio Backend (Laravel)
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/var/www # Sincroniza tu código local con el contenedor
+    networks:
+      - app-network
+
+  # Servicio Frontend (Vue)
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Evita borrar los node_modules del contenedor
+    depends_on:
+      - api # Espera a que la API arranque
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
